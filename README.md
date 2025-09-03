@@ -1,5 +1,8 @@
 ### HLS Caching for Offline Playback on iOS
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17047096.svg)](https://doi.org/10.5281/zenodo.17047096)
+
+
 <img width="929" height="494" alt="image" src="https://github.com/user-attachments/assets/0c7ff40a-dfc2-4ddb-8069-d2f928512519" />
 
 
