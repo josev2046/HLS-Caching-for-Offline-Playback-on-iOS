@@ -1,0 +1,73 @@
+@startuml
+!theme toy
+skinparam {
+  ' A refined, professional aesthetic
+  ActivityBorderColor #333333
+  ActivityBackgroundColor #FFFFFF
+  ArrowColor #333333
+  LineColor #333333
+  FontColor #333333
+  FontSize 12
+  Shadowing false
+  BorderThickness 1
+
+  ' Styles for general components and actors
+  Rectangle {
+    BorderColor #333333
+    BackgroundColor #F8F8F8
+    Shadowing false
+  }
+  Actor {
+    FontColor #333333
+    BorderColor #DDDDDD
+    BackgroundColor #F0F0F0
+    Shadowing false
+  }
+  Note {
+    FontColor #666666
+    BackgroundColor #FFFFFF
+    BorderColor #999999
+    FontSize 11
+    Shadowing false
+  }
+}
+skinparam Linetype ortho
+
+
+participant "iOS App" as App
+participant "AVFoundation" as AVF
+participant "HLS Video Server" as Server
+database "Local Storage" as Local
+participant "AVPlayer" as Player
+
+autonumber
+
+box "Online: Caching Process"
+    App -> AVF: Request HLS asset for download
+    note right: Uses `AVAssetDownloadURLSession`
+    activate AVF
+    AVF -> Server: Fetch .m3u8 playlist and .ts segments
+    activate Server
+    Server --> AVF: Stream HLS segments
+    deactivate Server
+    AVF -> Local: Save HLS playlist and segments
+    note right: Files are persisted locally.
+    AVF --> App: Download complete
+    deactivate AVF
+end box
+
+...
+
+box "Offline: Playback Process"
+    App -> Player: Request to play video
+    activate Player
+    Player -> Local: Access local .m3u8 playlist
+    note left of Player: Player reads local manifest.
+    activate Local
+    Local --> Player: Retrieve video segments
+    deactivate Local
+    Player -> App: Begin video playback
+    deactivate Player
+end box
+
+@enduml
